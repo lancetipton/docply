@@ -11,7 +11,13 @@ const dockerCmdError = err => {
   error.throwError(message || `Docker command failed!`)
 }
 
+const loadManifestError = (err, loc) => {
+  const message = err ? isStr(err) ? err : err.message : ''
+  error.throwError(`Error loading image manifest from ${loc}\n`, message)
+}
+
 module.exports = {
   dockerCmdError,
+  loadManifestError,
   tarCreateError
 }

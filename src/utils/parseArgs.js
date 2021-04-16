@@ -14,16 +14,24 @@ const task = {
     tty: {
       type: 'bool',
       default: true
+    },
+    log: {
+      type: 'bool',
+      default: false
     }
   }
 }
 
 const parseArgs = async () => {
-  return await argsParse({
+  const params = await argsParse({
     task,
     params: {},
     args: process.argv.slice(2),
   })
+
+  params.log = params.log && params.tty
+
+  return params
 }
 
 module.exports = {
