@@ -1,9 +1,9 @@
 const path = require('path')
 const { uuid } = require('@keg-hub/jsutils')
-const { TEMP_PATH } = require('../constants/constants')
+const { TEMP_PATH, MOCKS_PATH } = require('../constants/constants')
 
-const getTarFolder = (folder=uuid()) => {
-  return path.join(TEMP_PATH, folder)
+const getTarFolder = (folder=uuid(), test) => {
+  return path.join(test ? MOCKS_PATH : TEMP_PATH, folder)
 }
 
 const getTarPath = (tarName=uuid()) => {

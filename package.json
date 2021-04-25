@@ -30,7 +30,8 @@
   },
   "private": false,
   "scripts": {
-    "dev": "node src/docply.js",
+    "dev": "node src/docply.js --tty --log",
+    "e2e": "node src/docply.js --tty --log --test --hash ./image/7d5b42b0-9f2d-425b-accc-35aa1a37f23f",
     "test": ""
   },
   "dependencies": {

@@ -1,0 +1,59 @@
+{
+   "id":"a803ca04f00ecd1c10fb4978f7a963d1461f4225e568901bc6990cb46a3e04be",
+   "created":"2021-03-05T23:25:25.230064203Z",
+   "container":"f5a78ef54769bb8490754e9e063a89f90cc8eee6a6c5a0a72655826e99df116e",
+   "container_config":{
+      "Hostname":"f5a78ef54769",
+      "Domainname":"",
+      "User":"",
+      "AttachStdin":false,
+      "AttachStdout":false,
+      "AttachStderr":false,
+      "Tty":false,
+      "OpenStdin":false,
+      "StdinOnce":false,
+      "Env":[
+         "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      ],
+      "Cmd":[
+         "/bin/sh",
+         "-c",
+         "#(nop) ",
+         "CMD [\"/hello\"]"
+      ],
+      "Image":"sha256:77fe0a37fa6ce641a004815f2761a9042618557d253f312cd3da61780e372c8f",
+      "Volumes":null,
+      "WorkingDir":"",
+      "Entrypoint":null,
+      "OnBuild":null,
+      "Labels":{
+         
+      }
+   },
+   "docker_version":"19.03.12",
+   "config":{
+      "Hostname":"",
+      "Domainname":"",
+      "User":"",
+      "AttachStdin":false,
+      "AttachStdout":false,
+      "AttachStderr":false,
+      "Tty":false,
+      "OpenStdin":false,
+      "StdinOnce":false,
+      "Env":[
+         "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      ],
+      "Cmd":[
+         "/hello"
+      ],
+      "Image":"sha256:77fe0a37fa6ce641a004815f2761a9042618557d253f312cd3da61780e372c8f",
+      "Volumes":null,
+      "WorkingDir":"",
+      "Entrypoint":null,
+      "OnBuild":null,
+      "Labels":null
+   },
+   "architecture":"amd64",
+   "os":"linux"
+}

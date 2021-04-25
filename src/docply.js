@@ -1,26 +1,32 @@
+const path = require('path')
 const { cleanup } = require('./utils/cleanup')
 const { modifyImg } = require('./modify/modify')
 const { Logger } = require('@keg-hub/cli-utils')
 const { parseArgs } = require('./utils/parseArgs')
 const { pack, unpack } = require('./libs/tar/tar')
+const { getTarFolder } = require('./utils/getTarPath')
 const { getImageRef, saveTar, loadImg } = require('./libs/docker/docker')
+
+const creatTarFromImg = async params => {
+  const { image, hash, log, tty, test } = params
+  if(hash) return getTarFolder(hash, test)
+
+  const imgRef = await getImageRef(image, tty)
+
+  log && Logger.pair(`Creating tar of image`, imgRef)
+  const tarPath = await saveTar(imgRef)
+
+  log && Logger.pair(`Unpacking image tar at path`, tarPath)
+  return await unpack(tarPath)
+}
 
 const docply = async (ref, opts) => {
   const params = await parseArgs()
-  // const { log } = params
-  // const log = true
+  const { log } = params
 
-  // const imgRef = await getImageRef(params.image)
-  // const imgRef = await getImageRef(params.image, params.tty)
+  const tarFolder = await creatTarFromImg(params)
 
-  // log && Logger.pair(`Creating tar of image`, imgRef)
-  // const tarPath = await saveTar(imgRef)
-
-  // log && Logger.pair(`Unpacking image tar at path`, tarPath)
-  // const tarFolder = await unpack(tarPath)
-
-  // log && Logger.pair(`Modifying image manifest at path`, tarFolder)
-  const tarFolder = `/Users/ltipton/keg-hub/taps/docply/.tmp/de8f009d-d557-4d8b-b233-123e71dce076`
+  log && Logger.pair(`Modifying image manifest at path`, tarFolder)
   const modified = await modifyImg(tarFolder, params, opts)
 
   // log && Logger.pair(`Re-packing tar into docker image...`)

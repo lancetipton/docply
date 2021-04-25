@@ -5,6 +5,10 @@ const task = {
     image: {},
     fromTar: {},
     toTar: {},
+    hash: {},
+    test: {
+      default: false
+    },
     remove: {
       type: 'array'
     },
