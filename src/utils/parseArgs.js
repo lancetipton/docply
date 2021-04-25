@@ -30,17 +30,14 @@ const task = {
     },
     clean: {
       description: 'Delete the tmp files created during the modify process',
-      type: 'bool',
       default: true
     },
     import: {
       description: 'Toggle the tar back into docker. The --clean option is disabled when false',
-      type: 'bool',
       default: true
     },
     tty: {
       description: 'Toggle terminal tty',
-      type: 'bool',
       default: true
     },
     log: {

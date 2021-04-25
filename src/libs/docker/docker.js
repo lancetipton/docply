@@ -3,9 +3,12 @@ const { convertToJson } = require('./helpers')
 const { asyncCmd } = require('@keg-hub/spawn-cmd')
 const { isArr, noOpObj } = require('@keg-hub/jsutils')
 const { getTarPath } = require('../../utils/getTarPath')
-const { tarCreateError, dockerCmdError }  = require('../../utils/errors/errors')
+const { dockerCmdError }  = require('../../utils/errors/errors')
 
-
+/**
+ * Cache holder for docker images
+ * @type {Object}
+ */
 let __IMAGES
 
 /**
@@ -112,18 +115,7 @@ const saveTar = async (imageRef, tarName) => {
  */
 const loadImg = async tarPath => {
   const { data, error } = await dockerCmd(`load -i ${tarPath}`)
-  error && dockerCmdError(error)
-
-  // Get the images to compare with the cached images
-  const images = await getImages()
-  const cachedIds = __IMAGES.map(img => img.id)
-
-  const imgObj = images.find(img => !cachedIds.includes(img.id))
-  imgObj 
-    ? __IMAGES.push(imgObj)
-    : dockerCmdError(`Could not find loaded image!`)
-
-  return imgObj
+  return error ? dockerCmdError(error) : data.split(':').pop().trim()
 }
 
 module.exports = {

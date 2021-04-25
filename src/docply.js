@@ -41,14 +41,15 @@ const creatTarFromImg = async params => {
 const createImageFromTar = async (params, tarFolder) => {
   const { import:importImg, log, to, clean, test } = params
 
-  log && Logger.pair(`Re-packing tar into docker image...`)
+  log && Logger.pair(`Re-packing tar into docker image from folder`, tarFolder)
   const tarPackage = await pack(tarFolder, to)
 
-  log && Logger.pair(`Loading image back into docker...`)
+  log && Logger.pair(`Importing image into docker with tar`, tarPackage)
   const imgId = importImg && await loadImg(tarPackage, to, test)
+  Logger.pair(`Finished importing modified image with ID`, imgId)
 
   log && Logger.pair(`Cleaning up temp folder...`)
-  clean && await cleanup(tarFolder)
+  clean && !test && await cleanup(tarFolder)
 
   return imgId || tarPackage
 }
@@ -64,12 +65,16 @@ const createImageFromTar = async (params, tarFolder) => {
  * @returns {string} - Docker image ID of the newly created image
  */
 const docply = async (overrides) => {
-  const params = await parseArgs(overrides)
   let tarFolder
   try {
+
+    const params = await parseArgs(overrides)
     tarFolder = await creatTarFromImg(params)
-    const modified = await modifyImg(tarFolder, params)
-    const imgId = await createImageFromTar(params, tarFolder, modified)
+
+    await modifyImg(tarFolder, params)
+
+    const imgId = await createImageFromTar(params, tarFolder)
+    imgId && Logger.success(`\nSuccessfully modified image!\n`)
 
     return imgId
   }
