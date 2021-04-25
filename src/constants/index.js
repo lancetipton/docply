@@ -1,3 +1,4 @@
 module.exports = {
-  ...require('constants'),
+  ...require('./constants'),
+  ...require('./jsonModel'),
 }

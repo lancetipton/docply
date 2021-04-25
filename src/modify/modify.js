@@ -1,8 +1,12 @@
 const path = require('path')
+const { loadConfig } = require('./loadConfig')
 const { Logger } = require('@keg-hub/cli-utils')
-const { isArr, isObj } = require('@keg-hub/jsutils')
+const { jsonModel } = require('../constants/jsonModel')
+const { validateModel } = require('./validateModel')
+
 const { IMG_MANIFEST } = require('../constants/constants')
 const { loadManifestError } = require('../utils/errors/errors')
+const { isArr, isObj, deepMerge, set } = require('@keg-hub/jsutils')
 
 const loadImgConfig = (tarFolder, configName) => {
   const configLoc = path.join(tarFolder, configName)
@@ -19,32 +23,58 @@ const loadImgConfig = (tarFolder, configName) => {
    }
 }
 
- const loadManifest = tarFolder => {
-   const manifestLoc = path.join(tarFolder, IMG_MANIFEST)
-   try {
-    const manifest = require(manifestLoc)
-    return isArr(manifest)
-      ? manifest[0]
-      : isObj(manifest)
-        ? manifest
-        : loadManifestError(`Image manifest must be an object or array`, manifestLoc)
-   }
-   catch(err){
-     loadManifestError(err.message, manifestLoc)
-   }
- }
- 
+const loadManifest = tarFolder => {
+  const manifestLoc = path.join(tarFolder, IMG_MANIFEST)
+  try {
+  const manifest = require(manifestLoc)
+  return isArr(manifest)
+    ? manifest[0]
+    : isObj(manifest)
+      ? manifest
+      : loadManifestError(`Image manifest must be an object or array`, manifestLoc)
+  }
+  catch(err){
+    loadManifestError(err.message, manifestLoc)
+  }
+}
+
+/**
+ * Modifies an exported docker image json config
+ * Uses the passed in config, remove, and add params
+ * @function
+ * @exported
+ * @param {string} tarFolder - Path to the exported tar folder
+ * @param {Object} params - Params for modifying the json config
+ *
+ * @returns {boolean} - True if the config was successfully modified
+ */
 const modifyImg = async (tarFolder, params) => {
-  const { log } = params
+  const { add, config, log, remove } = params
+  const customConfig = loadConfig(config)
 
   log && Logger.pair(`Modifying image manifest at path`, tarFolder)
 
   const manifest = loadManifest(tarFolder)
   const imgConfig = loadImgConfig(tarFolder, manifest.Config)
 
-  // TODO: modify the config as needed based on params and opts
-  console.log(imgConfig)
+  // Merge with the customConfig
+  // Pass customConfig last so it has priority 
+  let modified = deepMerge(imgConfig, customConfig)
 
+  // We don't want to completely remove items from the config
+  // Because that will create an invalid JSON file that docker won't load
+  // So instead we the value to null
+  remove.map(item => (set(modified, item, null)))
+
+  // Loop over the items to be added and add them
+  add.map(item => (set(modified, ...item.split('='))))
+
+  // Validate the model match the defined jsonModel spec
+  // This ensures we create a valid json config that docker can load
+  // If it's invalid, then validateModel will throw
+  validateModel(modified, jsonModel)
+
+  return modified
 }
 
 module.exports = {

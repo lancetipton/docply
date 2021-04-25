@@ -31,15 +31,16 @@
   "private": false,
   "scripts": {
     "dev": "node src/docply.js --tty --log",
-    "e2e": "node src/docply.js --tty --log --test --hash mock-tar-export",
+    "e2e": "node src/docply.js --tty --log --test --hash mock-tar-export --config src/__mocks__/config/mockConfig.js --remove config.Cmd",
     "test": ""
   },
   "dependencies": {
-    "@keg-hub/ask-it": "0.0.2",
     "@keg-hub/args-parse": "6.2.1",
+    "@keg-hub/ask-it": "0.0.2",
     "@keg-hub/cli-utils": "0.0.2",
     "@keg-hub/jsutils": "8.3.0",
     "@keg-hub/spawn-cmd": "^0.1.2",
+    "app-root-path": "^3.0.0",
     "rimraf": "3.0.2",
     "tar-fs": "^2.1.1"
   },

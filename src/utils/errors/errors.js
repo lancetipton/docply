@@ -1,5 +1,5 @@
 const { isStr } = require('@keg-hub/jsutils')
-const { error } = require('@keg-hub/cli-utils')
+const { error, Logger } = require('@keg-hub/cli-utils')
 
 const tarCreateError = (err, imgRef) => {
   const message = err ? `\n${err.message}` : ''
@@ -16,8 +16,16 @@ const loadManifestError = (err, loc) => {
   error.throwError(`Error loading image manifest from ${loc}\n`, message)
 }
 
+const invalidImgJSON = (output, mess) => {
+  const message = mess || `Invalid Image JSON object`
+  Logger.error(`\n${message}\n`)
+  Logger.log(output)
+  error.throwTaskFailed()
+}
+
 module.exports = {
   dockerCmdError,
+  invalidImgJSON,
   loadManifestError,
   tarCreateError
 }
