@@ -1,7 +1,9 @@
 
 const mockConfig = {
   config: {
-    Labels: null,
+    Labels: {
+      "com.test.label": "My-Test-Label"
+    },
   }
 }
 

@@ -1,15 +1,23 @@
 const path = require('path')
 const { loadConfig } = require('./loadConfig')
+const { saveConfig } = require('./saveConfig')
 const { Logger } = require('@keg-hub/cli-utils')
 const { jsonModel } = require('../constants/jsonModel')
 const { validateModel } = require('./validateModel')
-
 const { IMG_MANIFEST } = require('../constants/constants')
 const { loadManifestError } = require('../utils/errors/errors')
 const { isArr, isObj, deepMerge, set } = require('@keg-hub/jsutils')
 
-const loadImgConfig = (tarFolder, configName) => {
-  const configLoc = path.join(tarFolder, configName)
+/**
+ * Loads the image config file the de-compressed .tar folder
+ * @function
+ * @private
+ * @throws
+ * @param {string} configLoc - Path to the image JSON config file
+ *
+ * @returns {Object} - Image JSON config as a JS Object
+ */
+const loadImgConfig = (configLoc) => {
    try {
     const config = require(configLoc)
     return isArr(config)
@@ -23,6 +31,15 @@ const loadImgConfig = (tarFolder, configName) => {
    }
 }
 
+/**
+ * Loads the image manifest JSON file which contains the image config location
+ * @function
+ * @private
+ * @throws
+ * @param {string} tarFolder - Path to the folder that contains the image manifest JSON
+ *
+ * @returns {Object} - Image manifest JSON as a JS Object
+ */
 const loadManifest = tarFolder => {
   const manifestLoc = path.join(tarFolder, IMG_MANIFEST)
   try {
@@ -50,12 +67,15 @@ const loadManifest = tarFolder => {
  */
 const modifyImg = async (tarFolder, params) => {
   const { add, config, log, remove } = params
-  const customConfig = loadConfig(config)
 
-  log && Logger.pair(`Modifying image manifest at path`, tarFolder)
+  config && log && Logger.pair(`Loading custom image config...`)
+  const customConfig = config && loadConfig(config)
 
   const manifest = loadManifest(tarFolder)
-  const imgConfig = loadImgConfig(tarFolder, manifest.Config)
+  const configLoc = path.join(tarFolder, manifest.Config)
+  const imgConfig = loadImgConfig(configLoc)
+
+  log && Logger.pair(`Modifying image manifest at path`, tarFolder)
 
   // Merge with the customConfig
   // Pass customConfig last so it has priority 
@@ -73,6 +93,10 @@ const modifyImg = async (tarFolder, params) => {
   // This ensures we create a valid json config that docker can load
   // If it's invalid, then validateModel will throw
   validateModel(modified, jsonModel)
+
+  // Save the config file overwriting the original
+  log && Logger.pair(`Saving modified image config to path`, configLoc)
+  await saveConfig(configLoc, modified)
 
   return modified
 }

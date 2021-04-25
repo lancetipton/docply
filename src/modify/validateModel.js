@@ -1,6 +1,7 @@
 
-const { validate, typeOf, isObj, isArr } = require('@keg-hub/jsutils')
+const { Logger } = require('@keg-hub/cli-utils')
 const { invalidImgJSON } = require('../utils/errors/errors')
+const { validate, typeOf, isObj, isArr } = require('@keg-hub/jsutils')
 
 /**
  * Checks if the failed values of the validator are null
@@ -33,7 +34,12 @@ const buildValidator = (obj, model) => {
   return Object.entries(obj)
     .reduce((args, [key, value]) => {
       const type = typeOf(value).toLowerCase()
-      args.validators[key] = model[key].validate
+      const validateMethod = model[key]
+        ? model[key].validate
+        : model.validate || Logger.error(`\nMissing key in image jsonModel => ${key}\n`)
+      
+      validateMethod &&
+        (args.validators[key] = validateMethod)
 
       return args
     }, { object: obj, validators: {} })

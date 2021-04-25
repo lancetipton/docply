@@ -48,7 +48,7 @@ const createImageFromTar = async (params, tarFolder) => {
   const imgId = importImg && await loadImg(tarPackage, to, test)
 
   log && Logger.pair(`Cleaning up temp folder...`)
-  clean && await cleanup(tarFolder, test)
+  clean && await cleanup(tarFolder)
 
   return imgId || tarPackage
 }
@@ -65,11 +65,17 @@ const createImageFromTar = async (params, tarFolder) => {
  */
 const docply = async (overrides) => {
   const params = await parseArgs(overrides)
-  const tarFolder = await creatTarFromImg(params)
-  const modified = await modifyImg(tarFolder, params)
-  const imgId = await createImageFromTar(params, modified)
+  let tarFolder
+  try {
+    tarFolder = await creatTarFromImg(params)
+    const modified = await modifyImg(tarFolder, params)
+    const imgId = await createImageFromTar(params, tarFolder, modified)
 
-  return imgId
+    return imgId
+  }
+  catch(err){
+    cleanup(tarFolder).then(() => { throw err })
+  }
 }
 
 // Check if the parent module has a parent

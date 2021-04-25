@@ -33,7 +33,7 @@ const configType = types.object.of({
   StdinOnce: types.boolean,
   Volumes: types.object,
   OnBuild: types.array.of(types.string),
-  Labels: types.object,
+  Labels: types.object.of(types.string),
 })
 
 const jsonModel = deepFreeze({

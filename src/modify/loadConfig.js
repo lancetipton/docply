@@ -18,10 +18,6 @@ const tryAsJson = config => {
     : JSON.parse(config)
 }
 
-const tryAsFilePath = config => {
-
-}
-
 /**
  * Loads the custom config object from a file path or from string JSON
  * @function
