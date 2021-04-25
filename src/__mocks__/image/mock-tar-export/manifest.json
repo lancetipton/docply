@@ -1,0 +1,9 @@
+[
+   {
+      "Config":"mock-img-config.json",
+      "RepoTags":null,
+      "Layers":[
+         "mock-parent-layer/layer.tar"
+      ]
+   }
+]

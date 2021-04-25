@@ -1,4 +1,5 @@
 const path = require('path')
+const { Logger } = require('@keg-hub/cli-utils')
 const { isArr, isObj } = require('@keg-hub/jsutils')
 const { IMG_MANIFEST } = require('../constants/constants')
 const { loadManifestError } = require('../utils/errors/errors')
@@ -33,7 +34,11 @@ const loadImgConfig = (tarFolder, configName) => {
    }
  }
  
-const modifyImg = async (tarFolder, params, opts) => {
+const modifyImg = async (tarFolder, params) => {
+  const { log } = params
+
+  log && Logger.pair(`Modifying image manifest at path`, tarFolder)
+
   const manifest = loadManifest(tarFolder)
   const imgConfig = loadImgConfig(tarFolder, manifest.Config)
 
