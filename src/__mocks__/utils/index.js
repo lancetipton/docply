@@ -1,4 +1,9 @@
+const utils = require('./utils')
+const errors = require('./errors')
+
 module.exports = {
-  ...require('./errors'),
-  ...require('./utils'),
+  errors,
+  utils,
+  ...errors,
+  ...utils,
 }

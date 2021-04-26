@@ -1,5 +1,5 @@
 
-const modifyImg = jest.fn(() => {
+const modifyImg = jest.fn((tarFolder, params) => {
 
 })
 

@@ -1,4 +1,8 @@
+const docker = require('./docker')
+const tar = require('./tar')
 module.exports = {
-  ...require('./docker'),
-  ...require('./tar'),
+  tar,
+  docker,
+  ...tar,
+  ...docker,
 }

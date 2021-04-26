@@ -1,6 +1,12 @@
+const config = require('./config')
+const modify = require('./modify')
+const validateModel = require('./validateModel')
 
 module.exports = {
-  ...require('./config'),
-  ...require('./modify'),
-  ...require('./validateModel'),
+  config,
+  modify,
+  validateModel,
+  ...config,
+  ...modify,
+  ...validateModel,
 }

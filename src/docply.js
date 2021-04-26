@@ -45,7 +45,7 @@ const createImageFromTar = async (params, tarFolder) => {
 
   log && Logger.pair(`Importing image into docker with tar`, tarPackage)
   const imgId = importImg && (await loadImg(tarPackage, to, test))
-  Logger.pair(`Finished importing modified image with ID`, imgId)
+  log && Logger.pair(`Finished importing modified image with ID`, imgId)
 
   log && Logger.pair(`Cleaning up temp folder...`)
   clean && !test && (await cleanup(tarFolder))
@@ -72,7 +72,7 @@ const docply = async overrides => {
     await modifyImg(tarFolder, params)
 
     const imgId = await createImageFromTar(params, tarFolder)
-    imgId && Logger.success(`\nSuccessfully modified image!\n`)
+    imgId && params.log && Logger.success(`\nSuccessfully modified image!\n`)
 
     return imgId
   }
@@ -86,4 +86,4 @@ const docply = async overrides => {
 // Check if the parent module has a parent
 // If it does, then it was called from code
 // So we should return the method instead of running it automatically
-module.parent ? (module.exports = { docply }) : docply()
+require.main === module ? docply() : (module.exports = { docply })
