@@ -28,11 +28,9 @@ const tryAsJson = config => {
  */
 const loadConfig = config => {
   let loadedConfig = tryAsJson(config)
-  return loadedConfig ||
-    loadModule(config, { rootDir }) ||
-    {}
+  return loadedConfig || loadModule(config, { rootDir }) || {}
 }
 
 module.exports = {
-  loadConfig
+  loadConfig,
 }

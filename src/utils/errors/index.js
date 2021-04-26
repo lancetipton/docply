@@ -1,3 +1,3 @@
 module.exports = {
-  ...require('./errors')
+  ...require('./errors'),
 }

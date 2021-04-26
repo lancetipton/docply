@@ -1,5 +1,4 @@
 const fs = require('fs')
-const path = require('path')
 const tar = require('tar-fs')
 const { getTarPath, getTarFolder } = require('../../utils/getTarPath')
 
@@ -7,7 +6,8 @@ const pack = (folder, tarName) => {
   const tarPath = getTarPath(tarName)
 
   return new Promise((res, rej) => {
-    tar.pack(folder)
+    tar
+      .pack(folder)
       .pipe(fs.createWriteStream(tarPath))
       .on('finish', () => res(tarPath))
       .on('error', err => rej(err))
@@ -27,5 +27,5 @@ const unpack = (tarPath, folder) => {
 
 module.exports = {
   pack,
-  unpack
+  unpack,
 }

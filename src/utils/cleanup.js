@@ -12,12 +12,11 @@ const { TEMP_PATH } = require('../constants/constants')
  * @returns {boolean} - True if the .tmp folder is cleaned
  */
 const cleanup = async () => {
-  return new Promise((res, rej) => rimraf(
-    path.join(TEMP_PATH, './*'),
-    err => err ? rej(err) : res(true)
-  ))
+  return new Promise((res, rej) =>
+    rimraf(path.join(TEMP_PATH, './*'), err => (err ? rej(err) : res(true)))
+  )
 }
 
 module.exports = {
-  cleanup
+  cleanup,
 }

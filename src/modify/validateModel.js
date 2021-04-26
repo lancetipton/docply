@@ -1,7 +1,6 @@
-
 const { Logger } = require('@keg-hub/cli-utils')
 const { invalidImgJSON } = require('../utils/errors/errors')
-const { validate, typeOf, isObj, isArr } = require('@keg-hub/jsutils')
+const { validate, isObj, isArr } = require('@keg-hub/jsutils')
 
 /**
  * Checks if the failed values of the validator are null
@@ -14,9 +13,10 @@ const { validate, typeOf, isObj, isArr } = require('@keg-hub/jsutils')
  *
  * @returns {Void}
  */
-const checkNonNullValue = (output) => {
-  const nonNullKeys = Object.values(output)
-    .filter(meta => !meta.success && meta.value !== null)
+const checkNonNullValue = output => {
+  const nonNullKeys = Object.values(output).filter(
+    meta => !meta.success && meta.value !== null
+  )
 
   nonNullKeys.length && invalidImgJSON(nonNullKeys)
 }
@@ -31,18 +31,19 @@ const checkNonNullValue = (output) => {
  * @returns {Object} - Contains the object to validate and its validator methods
  */
 const buildValidator = (obj, model) => {
-  return Object.entries(obj)
-    .reduce((args, [key, value]) => {
-      const type = typeOf(value).toLowerCase()
+  return Object.entries(obj).reduce(
+    (args, [key]) => {
       const validateMethod = model[key]
         ? model[key].validate
-        : model.validate || Logger.error(`\nMissing key in image jsonModel => ${key}\n`)
-      
-      validateMethod &&
-        (args.validators[key] = validateMethod)
+        : model.validate ||
+          Logger.error(`\nMissing key in image jsonModel => ${key}\n`)
+
+      validateMethod && (args.validators[key] = validateMethod)
 
       return args
-    }, { object: obj, validators: {} })
+    },
+    { object: obj, validators: {} }
+  )
 }
 
 /**
@@ -61,15 +62,14 @@ const validateModel = (obj, model) => {
   const [ success, outcome ] = validate(object, validators, { logs: false })
   !success && checkNonNullValue(outcome)
 
-  Object.entries(obj)
-    .map(([key, value]) => {
-      isObj(value)
-        ? validateModel(value, model[key].children)
-        : isArr(value) &&
-            value.map(val => validateModel({ val }, { val: model[key].children }))
-    })
+  Object.entries(obj).map(([ key, value ]) => {
+    isObj(value)
+      ? validateModel(value, model[key].children)
+      : isArr(value) &&
+        value.map(val => validateModel({ val }, { val: model[key].children }))
+  })
 }
 
 module.exports = {
-  validateModel
+  validateModel,
 }

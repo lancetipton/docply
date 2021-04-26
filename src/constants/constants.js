@@ -2,7 +2,6 @@ const path = require('path')
 const { deepFreeze } = require('@keg-hub/jsutils')
 const mocksPath = path.join(__dirname, `../__mocks__`)
 
-
 module.exports = deepFreeze({
   IMG_MANIFEST: 'manifest.json',
   MOCKS_PATH: mocksPath,

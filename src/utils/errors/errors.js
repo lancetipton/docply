@@ -7,12 +7,12 @@ const tarCreateError = (err, imgRef) => {
 }
 
 const dockerCmdError = err => {
-  const message = err ? isStr(err) ? err : err.message : false
+  const message = err ? (isStr(err) ? err : err.message) : false
   error.throwError(message || `Docker command failed!`)
 }
 
 const loadManifestError = (err, loc) => {
-  const message = err ? isStr(err) ? err : err.message : ''
+  const message = err ? (isStr(err) ? err : err.message) : ''
   error.throwError(`Error loading image manifest from ${loc}\n`, message)
 }
 
@@ -27,5 +27,5 @@ module.exports = {
   dockerCmdError,
   invalidImgJSON,
   loadManifestError,
-  tarCreateError
+  tarCreateError,
 }

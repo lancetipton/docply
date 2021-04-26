@@ -1,4 +1,3 @@
-const path = require('path')
 const { cleanup } = require('./utils/cleanup')
 const { modifyImg } = require('./modify/modify')
 const { Logger } = require('@keg-hub/cli-utils')
@@ -13,11 +12,11 @@ const { getImageRef, saveTar, loadImg } = require('./libs/docker/docker')
  * @private
  * @param {Object} params - Parsed options of a params object
  *
- * @returns {string} - Path to the exported image tar folder 
+ * @returns {string} - Path to the exported image tar folder
  */
 const creatTarFromImg = async params => {
   const { from, hash, log, tty, test } = params
-  if(hash) return getTarFolder(hash, test)
+  if (hash) return getTarFolder(hash, test)
 
   const imgRef = await getImageRef(from, tty)
 
@@ -36,20 +35,20 @@ const creatTarFromImg = async params => {
  * @private
  * @param {Object} params - Parsed options of a params object
  *
- * @returns {string} - Path to the exported image tar folder 
+ * @returns {string} - Path to the exported image tar folder
  */
 const createImageFromTar = async (params, tarFolder) => {
-  const { import:importImg, log, to, clean, test } = params
+  const { import: importImg, log, to, clean, test } = params
 
   log && Logger.pair(`Re-packing tar into docker image from folder`, tarFolder)
   const tarPackage = await pack(tarFolder, to)
 
   log && Logger.pair(`Importing image into docker with tar`, tarPackage)
-  const imgId = importImg && await loadImg(tarPackage, to, test)
+  const imgId = importImg && (await loadImg(tarPackage, to, test))
   Logger.pair(`Finished importing modified image with ID`, imgId)
 
   log && Logger.pair(`Cleaning up temp folder...`)
-  clean && !test && await cleanup(tarFolder)
+  clean && !test && (await cleanup(tarFolder))
 
   return imgId || tarPackage
 }
@@ -64,10 +63,9 @@ const createImageFromTar = async (params, tarFolder) => {
  *
  * @returns {string} - Docker image ID of the newly created image
  */
-const docply = async (overrides) => {
+const docply = async overrides => {
   let tarFolder
   try {
-
     const params = await parseArgs(overrides)
     tarFolder = await creatTarFromImg(params)
 
@@ -78,8 +76,10 @@ const docply = async (overrides) => {
 
     return imgId
   }
-  catch(err){
-    cleanup(tarFolder).then(() => { throw err })
+  catch (err) {
+    cleanup(tarFolder).then(() => {
+      throw err
+    })
   }
 }
 

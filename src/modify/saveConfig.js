@@ -14,5 +14,5 @@ const saveConfig = async (location, config) => {
 }
 
 module.exports = {
-  saveConfig
+  saveConfig,
 }

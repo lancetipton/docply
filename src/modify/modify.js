@@ -17,18 +17,18 @@ const { isArr, isObj, deepMerge, set } = require('@keg-hub/jsutils')
  *
  * @returns {Object} - Image JSON config as a JS Object
  */
-const loadImgConfig = (configLoc) => {
-   try {
+const loadImgConfig = configLoc => {
+  try {
     const config = require(configLoc)
     return isArr(config)
       ? config[0]
       : isObj(config)
         ? config
         : loadManifestError(`Image config must be an object or array`, configLoc)
-   }
-   catch(err){
-     loadManifestError(err.message, configLoc)
-   }
+  }
+  catch (err) {
+    loadManifestError(err.message, configLoc)
+  }
 }
 
 /**
@@ -43,14 +43,17 @@ const loadImgConfig = (configLoc) => {
 const loadManifest = tarFolder => {
   const manifestLoc = path.join(tarFolder, IMG_MANIFEST)
   try {
-  const manifest = require(manifestLoc)
-  return isArr(manifest)
-    ? manifest[0]
-    : isObj(manifest)
-      ? manifest
-      : loadManifestError(`Image manifest must be an object or array`, manifestLoc)
+    const manifest = require(manifestLoc)
+    return isArr(manifest)
+      ? manifest[0]
+      : isObj(manifest)
+        ? manifest
+        : loadManifestError(
+          `Image manifest must be an object or array`,
+          manifestLoc
+        )
   }
-  catch(err){
+  catch (err) {
     loadManifestError(err.message, manifestLoc)
   }
 }
@@ -78,16 +81,16 @@ const modifyImg = async (tarFolder, params) => {
   log && Logger.pair(`Modifying image manifest at path`, tarFolder)
 
   // Merge with the customConfig
-  // Pass customConfig last so it has priority 
+  // Pass customConfig last so it has priority
   let modified = deepMerge(imgConfig, customConfig)
 
   // We don't want to completely remove items from the config
   // Because that will create an invalid JSON file that docker won't load
   // So instead we the value to null
-  remove.map(item => (set(modified, item, null)))
+  remove.map(item => set(modified, item, null))
 
   // Loop over the items to be added and add them
-  add.map(item => (set(modified, ...item.split('='))))
+  add.map(item => set(modified, ...item.split('=')))
 
   // Validate the model match the defined jsonModel spec
   // This ensures we create a valid json config that docker can load
@@ -102,5 +105,5 @@ const modifyImg = async (tarFolder, params) => {
 }
 
 module.exports = {
-    modifyImg
+  modifyImg,
 }
