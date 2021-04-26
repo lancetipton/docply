@@ -1,13 +1,12 @@
 const path = require('path')
-const ROOT_DIR = path.join(__dirname, '../')
 
 module.exports = {
-  maxWorkers: 1,
-  rootDir: ROOT_DIR,
-  preset: 'rollup-jest',
-  transform: {
-    '^.+\\.js$': 'babel-jest',
-  },
+  rootDir: path.join(__dirname, '../'),
+  testEnvironment: "node",
+  verbose: true,
+  transformIgnorePatterns: [
+    ".*"
+  ],
   testMatch: [
     `<rootDir>/src/**/__tests__/**/*.js?(x)`
   ],
@@ -17,9 +16,10 @@ module.exports = {
     "<rootDir>/src/__tests__"
   ],
   collectCoverageFrom: [
-    "src/**/*.{js,jsx,ts,tsx}"
+    "src/**/*.{js}",
+    "!**/__mocks__/**/*.{js}"
   ],
-  moduleFileExtensions: [ 'js', 'json', 'jsx', 'es6' ],
+  moduleFileExtensions: [ 'js', 'json' ],
   globals: {
     __DEV__: true,
   },
