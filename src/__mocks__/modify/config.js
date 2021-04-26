@@ -1,12 +1,8 @@
-const loadConfig = jest.fn(() => {
+const loadConfig = jest.fn(() => {})
 
-})
-
-const saveConfig = jest.fn(() => {
-  
-})
+const saveConfig = jest.fn(() => {})
 
 module.exports = {
   loadConfig,
-  saveConfig
+  saveConfig,
 }

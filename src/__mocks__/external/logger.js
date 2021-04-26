@@ -40,5 +40,5 @@ const Logger = methods.reduce((logObj, method) => {
 }, {})
 
 module.exports = {
-  Logger
+  Logger,
 }

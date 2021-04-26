@@ -1,6 +1,6 @@
 const path = require('path')
 
-const cleanup = jest.fn(async () => (true))
+const cleanup = jest.fn(async () => true)
 
 const getTarFolder = jest.fn(() => {
   return path.join(__dirname, '../image/mock-tar-export')

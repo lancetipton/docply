@@ -1,7 +1,5 @@
-const validateModel = jest.fn(() => {
-
-})
+const validateModel = jest.fn(() => {})
 
 module.exports = {
-  validateModel
+  validateModel,
 }

@@ -1,6 +1,6 @@
 const path = require('path')
 
-const getImageRef = jest.fn((ref) => {
+const getImageRef = jest.fn(ref => {
   return ref || 'test-mock-img'
 })
 const loadImg = jest.fn(() => {

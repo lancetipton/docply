@@ -1,15 +1,17 @@
 global.resetJest()
 
-const resetMocks = global.setMocks({
-  '../libs/tar/tar': 'tar',
-  '../utils/cleanup': 'utils',
-  '../modify/modify': 'modify',
-  '../utils/parseArgs': 'utils',
-  '../utils/getTarPath': 'utils',
-  '@keg-hub/cli-utils': 'external',
-  '../libs/docker/docker': 'docker',
-}, module)
-
+const resetMocks = global.setMocks(
+  {
+    '../libs/tar/tar': 'tar',
+    '../utils/cleanup': 'utils',
+    '../modify/modify': 'modify',
+    '../utils/parseArgs': 'utils',
+    '../utils/getTarPath': 'utils',
+    '@keg-hub/cli-utils': 'external',
+    '../libs/docker/docker': 'docker',
+  },
+  module
+)
 
 const packMock = global.getMock('pack')
 const LoggerMock = global.getMock('Logger')
@@ -25,7 +27,6 @@ const getTarFolderMock = global.getMock('getTarFolder')
 const { docply } = require('../docply')
 
 describe('docply', () => {
-
   beforeEach(() => resetMocks())
 
   afterAll(() => global.resetJest())
@@ -74,7 +75,9 @@ describe('docply', () => {
   test('docply should pass the imgRef from getImageRef to saveTar', async () => {
     const overrides = { from: 'test-mock-img' }
     await docply(overrides)
-    expect(saveTarMock.mock.calls[0][0]).toBe(getImageRefMock.mock.results[0].value)
+    expect(saveTarMock.mock.calls[0][0]).toBe(
+      getImageRefMock.mock.results[0].value
+    )
   })
 
   test('docply should pass the tarPath from saveTar to unpack', async () => {
@@ -107,44 +110,70 @@ describe('docply', () => {
   })
 
   test('docply should call loadImg with the response from the pack method', async () => {
-    const overrides = { from: 'test-mock-img', to: 'modified-mock-img', import: true }
+    const overrides = {
+      from: 'test-mock-img',
+      to: 'modified-mock-img',
+      import: true,
+    }
     await docply(overrides)
     expect(loadImgMock).toHaveBeenCalled()
     expect(loadImgMock.mock.calls[0][0]).toBe(packMock.mock.results[0].value)
   })
 
   test('docply should not call loadImg when import is false', async () => {
-    const overrides = { from: 'test-mock-img', to: 'modified-mock-img', import: false }
+    const overrides = {
+      from: 'test-mock-img',
+      to: 'modified-mock-img',
+      import: false,
+    }
     await docply(overrides)
     expect(loadImgMock).not.toHaveBeenCalled()
   })
 
   test('docply should not call cleanup when clean is false', async () => {
-    const overrides = { from: 'test-mock-img', to: 'modified-mock-img', import: true, clean: false }
+    const overrides = {
+      from: 'test-mock-img',
+      to: 'modified-mock-img',
+      import: true,
+      clean: false,
+    }
     await docply(overrides)
     expect(cleanupMock).not.toHaveBeenCalled()
   })
 
   test('docply should call cleanup with the tarFolder when clean is true', async () => {
-    const overrides = { from: 'test-mock-img', to: 'modified-mock-img', import: true, clean: true }
+    const overrides = {
+      from: 'test-mock-img',
+      to: 'modified-mock-img',
+      import: true,
+      clean: true,
+    }
     await docply(overrides)
     const tarFolder = unpackMock.mock.results[0].value
     expect(cleanupMock).toHaveBeenCalledWith(tarFolder)
   })
 
   test('docply should not call Logger methods when log is false', async () => {
-    const overrides = { from: 'test-mock-img', to: 'modified-mock-img', import: true, log: false }
+    const overrides = {
+      from: 'test-mock-img',
+      to: 'modified-mock-img',
+      import: true,
+      log: false,
+    }
     await docply(overrides)
     expect(LoggerMock.pair).not.toHaveBeenCalled()
     expect(LoggerMock.success).not.toHaveBeenCalled()
-
   })
 
   test('docply should call Logger methods when log is true', async () => {
-    const overrides = { from: 'test-mock-img', to: 'modified-mock-img', import: true, log: true }
+    const overrides = {
+      from: 'test-mock-img',
+      to: 'modified-mock-img',
+      import: true,
+      log: true,
+    }
     await docply(overrides)
     expect(LoggerMock.pair).toHaveBeenCalled()
     expect(LoggerMock.success).toHaveBeenCalled()
   })
-
 })

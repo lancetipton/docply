@@ -1,3 +1,3 @@
 module.exports = {
-  mockConfig: require('./mockConfig')
+  mockConfig: require('./mockConfig'),
 }
